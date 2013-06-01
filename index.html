@@ -10,6 +10,7 @@
     <script src="js/jquery.2.0.js"></script>
 
     <script type="text/javascript">
+        document.write("<script src=\"js\/eventManager.js?" + (new Date()).getTime() + "\"><\/script>");
         document.write("<script src=\"js\/drugger.js?" + (new Date()).getTime() + "\"><\/script>");
         document.write("<link rel=\"stylesheet\" href=\"css\/style.css?" + (new Date()).getTime() + "\" type=\"text/css\">");
     </script>
@@ -18,12 +19,26 @@
 </head>
 <body>   
  
-<h1>PLUGIN</h1>
+<h1>drugger</h1>
+
+
+
+<div id="slide_me"></div>
 
  
 
 <script type="text/javascript">
-    $('#selector')._();
+
+	$(document).ready(function(){
+
+		$('#slide_me').drugger({
+			a: 10,
+			b: 1000,
+			step: 10
+		});
+
+	})
+
 </script>
 
 </body>

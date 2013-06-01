@@ -1,3 +1,32 @@
 body {
 	font: normal 12px tahoma;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.slider {
+	position: relative;
+	height: 10px;
+	background: #00f;
+
+
+}
+
+
+.handler {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 10px;
+	height: 10px;
+	background: #f00;
+}
