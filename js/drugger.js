@@ -89,7 +89,9 @@
 
                 var defaults = {
                     a: null,
-                    b: null
+                    b: null,
+                    step: null,
+                    direction: 'horizontal'
                 }
 
 
@@ -103,7 +105,7 @@
                 _this.pos = {}
 
 
-                options = $.extend(defaults, options)
+                _this.options = $.extend(defaults, options)
 
 
                 this.draw(_this);
@@ -134,7 +136,8 @@
 //
 
                 pos = {};
-//                pos.lockd = true;
+                pos.lockd = true;
+
 
                 _this._handler.on({"mousedown": function (e) {
 
@@ -143,63 +146,61 @@
 
 
                     //abs el
-//                    pos.lockd = false;
-//                    pos.x = $(this).offset().left + $(this).position().left;
-//                    pos.y = $(this).offset().top + $(this).position().top;
-//
-//
-//
-//                                        _("mousedown" + $(this).offset().left + " " + $(this).position().left );
-//
+                    pos.lockd = false;
+
+                    var x0 = event.pageX - $(_this._handler).offset().left;
+                    var y0 = event.pageY - $(_this._handler).offset().top;
 
 
-                    //  handler css pos:abs x:0 y:0   .offset()
+                    var xx = $(_this._slider).width() - $(_this._handler).width();
+                    var yy = $(_this._slider).height() - $(_this._handler).height();
 
-//                    _("mousedown" + $(this).offset().left + " " + $(this).offset().top );
-//                    _("mousedown" + event.pageX + " " + event.pageY);
-
-
-
-
-//                    _("mousedown" + $(this).offset().left + " " + $(this).offset().top );
-//                    _("mousedown" + event.pageX + " " + event.pageY );
-//                    _("mousedown" + event.clientX + " " + event.clientY );
-
-                     var _x = event.pageX - $(_this._handler).offset().left;
-                    var _y = event.pageY - $(_this._handler).offset().top
+                    _(xx);
+                    _(yy);
 
                     $(document).on("mousemove", function(){
 
-//                        if (pos.lockd) return;
+                        if (pos.lockd) return;
                         //новые координаты мыши
+                        pos.mowd = true;
 
                         //handler css
-                        _("mousedown" + (event.pageX - $(_this._handler).offset().left) + " " + (event.pageY - $(_this._handler).offset().top));
+
+                        _y = (_this.options.direction === "horizontal") ? event.pageY - $(_this._slider).offset().top - y0 : 0;
+                        _x = (_this.options.direction === "vertical") ? event.pageX  - $(_this._slider).offset().left - x0 : 0;
+
+                        if (_y < 0) _y = 0;
+                        if (_x < 0) _x = 0;
+
+                        if (_y > yy) _y = yy;
+                        if (_x > xx) _x = xx;
 
 
 
-                        //css handler
 
                         $(_this._handler).css({
-                            top: event.pageY - $(_this._slider).offset().top - _y,
-                            left: event.pageX  - $(_this._slider).offset().left - _x
+                            top: _y,
+                            left: _x
                         });
-//                        _(pos.x);
-//                        _(pos.y);
+
+
 
                         _("mousemove");
-                    })
+                    });
 
+                    $(document).on("mouseup", function(){
 
-
-
-                    },
-                    "mouseup": function () {
 
                         pos.lockd = true;
 
                         _("mouseup");
+                    });
+
+
+
+
                     },
+
                     "mouseleave": function () {
 
 
