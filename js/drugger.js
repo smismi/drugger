@@ -70,6 +70,32 @@
 
                 _this.pos.lockd = true;
 
+
+
+                $("#set_to_step").on("click", function (e) {
+
+
+                    _this.slider.width = $(_this._slider).width();
+                    _this.slider.height = $(_this._slider).height();
+
+                    _this.handler.width = $(_this._handler).width();
+                    _this.handler.height = $(_this._handler).height();
+
+
+                    _h = (_this.options.direction === "horizontal") ? _this.slider.width : _this.slider.height;
+
+                    _step_px = _h / _this.options.step;
+
+                    for (i=0; i<=_this.options.step; i++ ) {
+
+                        _steps[i] = _step_px * i;
+
+                    }
+
+                    setToStep(4);
+
+
+                });
                 _this._handler.on({"mousedown": function (e) {
 
 
@@ -189,7 +215,23 @@
                         top: y,
                         left: x
                     });
-                }
+                };
+
+                var setToStep = function (step) {
+
+                    step = (step > _this.options.step) ? _this.options.step : step;
+
+                    y = (_this.options.direction === "vertical") ? (_step_px - (_this.handler.width / _this.options.step)) * step : 0;
+                    x = (_this.options.direction === "horizontal") ? (_step_px - (_this.handler.height / _this.options.step)) * step : 0;
+
+                    setPosition(x, y);
+                };
+
+                var setToValue = function (value) {
+
+
+                    setPosition(x, y);
+                };
 
             },
             reinit: function () {
