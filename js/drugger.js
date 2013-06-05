@@ -53,7 +53,6 @@
 
                 _this._slider.addClass("slider").append(_this._handler);
 
-
                 this.event(_this);
             },
             event: function (_this) {
@@ -66,9 +65,10 @@
 //                _e.eventMove 		= (isTouch) ? "touchmove" : "mousemove";
 //
 
+                var _h, _p;
+                var _steps = [];
 
                 _this.pos.lockd = true;
-
 
                 _this._handler.on({"mousedown": function (e) {
 
@@ -92,6 +92,17 @@
                     _this.pos.yy = _this.slider.height - $(_this._handler).height();
 
 
+                    _h = (_this.options.direction === "horizontal") ? _this.slider.width : _this.slider.height;
+
+                    _step_px = _h / _this.options.step;
+
+                    for (i=0; i<=_this.options.step; i++ ) {
+
+                        _steps[i] = _step_px * i;
+
+                    }
+
+
                     $(document).on("mousemove", function(){
 
                         if (_this.pos.lockd) return;
@@ -99,8 +110,8 @@
 
                         //handler css
 
-                        y = (_this.options.direction === "horizontal") ? event.pageY - $(_this._slider).offset().top - _this.pos.y0 : 0;
-                        x = (_this.options.direction === "vertical") ? event.pageX  - $(_this._slider).offset().left - _this.pos.x0 : 0;
+                        y = (_this.options.direction === "vertical") ? event.pageY - $(_this._slider).offset().top - _this.pos.y0 : 0;
+                        x = (_this.options.direction === "horizontal") ? event.pageX  - $(_this._slider).offset().left - _this.pos.x0 : 0;
 
                         if (y < 0) y = 0;
                         if (x < 0) x = 0;
@@ -143,20 +154,15 @@
 //                    _(_this.options.step);
 //                    _(_this.pos.xx);
 //                    _(_this.slider.width  / _this.slider.width / _this.options.step);
-                    var _step_px = _this.slider.width / _this.options.step;
-                    var _steps = [];
-
-                    for (i=0; i<=_this.options.step; i++ ) {
-
-                        _steps[i] = _step_px * i;
-
-                    }
 
 
-                    step = discret(x, _step_px, _steps);
 
-                    y = (_this.options.direction === "horizontal") ? (_step_px - (_this.handler.width / _this.options.step)) * step : 0;
-                    x = (_this.options.direction === "vertical") ? (_step_px - (_this.handler.height / _this.options.step)) * step : 0;
+                    _p = (_this.options.direction === "horizontal") ? x : y;
+
+                    step = discret(_p, _step_px, _steps);
+
+                    y = (_this.options.direction === "vertical") ? (_step_px - (_this.handler.width / _this.options.step)) * step : 0;
+                    x = (_this.options.direction === "horizontal") ? (_step_px - (_this.handler.height / _this.options.step)) * step : 0;
 
 
                     setPosition(x, y)

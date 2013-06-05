@@ -13,10 +13,19 @@ body {
 
 
 
+/*.slider {*/
+	/*position: relative;*/
+	/*height: 210px;*/
+    /*width: 10px;*/
+	/*background: #00f;*/
+
+
+/*}*/
+
 .slider {
 	position: relative;
-	height: 10px;
-    width: 200px;
+	width: 210px;
+    height: 10px;
 	background: #00f;
 
 
