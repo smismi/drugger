@@ -7,78 +7,6 @@
     $.fn.drugger = function (options) {
 
 
-//init
-
-
-//bind
-
-//
-//		var drg = function(){
-//
-//
-//			var activate = function()  {
-//
-
-
-//				return()
-//			}
-//
-//			var deactivate = function() {
-//
-//			}
-//
-//
-//
-//
-//		}
-
-//		return drg;
-
-//		_handler.on("mousedown", function(event){
-//
-//
-//			_this.D = true;
-//
-//
-//			_this.pos.left = $(this).position().left;
-//			_this.pos.top = $(this).position().top;
-//
-//
-//			_("down" + _this.pos.left + " " +  _this.pos.top	);
-//			_("down" + event.pageX + " " + event.pageY	);
-//
-//
-//			$(window).on("mousemove", function(e){
-//
-//
-//				_("move");
-//				_("down" + e.pageX + " " + e.pageY	);
-//
-//
-//
-//
-//				return false
-//			});
-//
-//			return false
-//		});
-//
-//
-//
-//
-//		_handler.bind("mouseup", function(e){
-//
-//
-//			_this.D = false;
-//
-//
-//			$(window).off("mousemove");
-//			_("up");
-//
-//			return false
-//		});
-
-
         var Drugger = function (obj, options) {
             this.init(obj, options);
         };
@@ -102,7 +30,9 @@
 
                 _this.el = obj;
                 _this.D = false;
-                _this.pos = {}
+                _this.pos = {};
+
+                _this.slider = {};
 
 
                 _this.options = $.extend(defaults, options)
@@ -135,8 +65,8 @@
 //                _e.eventMove 		= (isTouch) ? "touchmove" : "mousemove";
 //
 
-                pos = {};
-                pos.lockd = true;
+
+                _this.pos.lockd = true;
 
 
                 _this._handler.on({"mousedown": function (e) {
@@ -146,54 +76,45 @@
 
 
                     //abs el
-                    pos.lockd = false;
+                    _this.pos.lockd = false;
 
-                    var x0 = event.pageX - $(_this._handler).offset().left;
-                    var y0 = event.pageY - $(_this._handler).offset().top;
+                    _this.pos.x0 = event.pageX - $(_this._handler).offset().left;
+                    _this.pos.y0 = event.pageY - $(_this._handler).offset().top;
 
+                    _this.slider.width = $(_this._slider).width();
+                    _this.slider.height = $(_this._slider).height();
 
-                    var xx = $(_this._slider).width() - $(_this._handler).width();
-                    var yy = $(_this._slider).height() - $(_this._handler).height();
+                    _this.pos.xx = _this.slider.width - $(_this._handler).width();
+                    _this.pos.yy = _this.slider.height - $(_this._handler).height();
 
-                    _(xx);
-                    _(yy);
 
                     $(document).on("mousemove", function(){
 
-                        if (pos.lockd) return;
+                        if (_this.pos.lockd) return;
                         //новые координаты мыши
-                        pos.mowd = true;
 
                         //handler css
 
-                        _y = (_this.options.direction === "horizontal") ? event.pageY - $(_this._slider).offset().top - y0 : 0;
-                        _x = (_this.options.direction === "vertical") ? event.pageX  - $(_this._slider).offset().left - x0 : 0;
+                        y = (_this.options.direction === "horizontal") ? event.pageY - $(_this._slider).offset().top - _this.pos.y0 : 0;
+                        x = (_this.options.direction === "vertical") ? event.pageX  - $(_this._slider).offset().left - _this.pos.x0 : 0;
 
-                        if (_y < 0) _y = 0;
-                        if (_x < 0) _x = 0;
+                        if (y < 0) y = 0;
+                        if (x < 0) x = 0;
 
-                        if (_y > yy) _y = yy;
-                        if (_x > xx) _x = xx;
-
-
+                        if (y > _this.pos.yy) y = _this.pos.yy;
+                        if (x > _this.pos.xx) x = _this.pos.xx;
 
 
-                        $(_this._handler).css({
-                            top: _y,
-                            left: _x
-                        });
-
-
-
-                        _("mousemove");
+                        drag(x,y);
                     });
 
                     $(document).on("mouseup", function(){
 
 
-                        pos.lockd = true;
+                        _this.pos.lockd = true;
 
                         _("mouseup");
+
                     });
 
 
@@ -203,25 +124,65 @@
 
                     "mouseleave": function () {
 
-
-
-//                        pos.lockd = true;
-
-                        //hightlight handler
-
-                        _("mouseleave");
                     },
+
                     "mouseenter": function () {
 
 
-
-
-
-
-                        //unhightlight handler
-
                         _("mouseenter");
+
+
                     }});
+
+
+
+                var drag = function(x, y) {
+
+
+//                    _(_this.options.step);
+//                    _(_this.pos.xx);
+//                    _(_this.slider.width  / _this.slider.width / _this.options.step);
+                    var _step_px = _this.slider.width / _this.options.step;
+                    var _steps = [];
+
+                    for (i=0; i<=_this.options.step; i++ ) {
+
+                        _steps[i] = _step_px * i;
+
+                    }
+
+
+                    step = discret(x, _step_px, _steps);
+
+                    y = (_this.options.direction === "horizontal") ? _step_px * step : 0;
+                    x = (_this.options.direction === "vertical") ? _step_px * step : 0;
+
+
+                    setPosition(x, y)
+
+//                    $(_this._handler).css({
+//                        top: y,
+//                        left: x
+//                    });
+                };
+
+                var discret = function (value, threshold,  array) {
+
+
+                    for (i=0; i<=_this.options.step; i++ ) {
+
+                        if (value < array[i] + threshold / 2) return i;
+
+                    }
+
+                };
+
+                var setPosition = function (x, y) {
+                    $(_this._handler).css({
+                        top: y,
+                        left: x
+                    });
+                }
 //				debugger;
 
             },
