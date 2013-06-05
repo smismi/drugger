@@ -33,6 +33,7 @@
                 _this.pos = {};
 
                 _this.slider = {};
+                _this.handler = {};
 
 
                 _this.options = $.extend(defaults, options)
@@ -84,6 +85,9 @@
                     _this.slider.width = $(_this._slider).width();
                     _this.slider.height = $(_this._slider).height();
 
+                    _this.handler.width = $(_this._handler).width();
+                    _this.handler.height = $(_this._handler).height();
+
                     _this.pos.xx = _this.slider.width - $(_this._handler).width();
                     _this.pos.yy = _this.slider.height - $(_this._handler).height();
 
@@ -129,9 +133,6 @@
                     "mouseenter": function () {
 
 
-                        _("mouseenter");
-
-
                     }});
 
 
@@ -154,8 +155,8 @@
 
                     step = discret(x, _step_px, _steps);
 
-                    y = (_this.options.direction === "horizontal") ? _step_px * step : 0;
-                    x = (_this.options.direction === "vertical") ? _step_px * step : 0;
+                    y = (_this.options.direction === "horizontal") ? (_step_px - (_this.handler.width / _this.options.step)) * step : 0;
+                    x = (_this.options.direction === "vertical") ? (_step_px - (_this.handler.height / _this.options.step)) * step : 0;
 
 
                     setPosition(x, y)
@@ -183,7 +184,6 @@
                         left: x
                     });
                 }
-//				debugger;
 
             },
             reinit: function () {
