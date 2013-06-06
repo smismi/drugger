@@ -16,8 +16,10 @@
             init: function (obj, options) {
 
                 var defaults = {
-                    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    min: null,
+                    max: null,
                     step: null,
+                    values: [],
                     direction: 'horizontal'
                 }
 
@@ -46,20 +48,26 @@
 
                 this._slider.addClass("slider").append(_this._handler);
 
-                this.prepare().mouseon();
+                this.prepare().discretize().mouseon();
 
             },
             prepare: function () {
 
                 _this = this;
                 this.pos.lockd = true;
+                this.slider = {};
+                this.handler = {};
 
+                return this;
+            },
+            discretize: function () {
+
+                if (this.options.step == null) return this;
 
                 this._steps = [];
                 this._values = [];
 
-                this.slider = {};
-                this.handler = {};
+
                 this.options.step = this.options.step - 1;
 
                 return this;
@@ -85,12 +93,16 @@
 
                 _h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
 
-                _step_px = _h / this.options.step;
+                if (this.options.step) {
 
-                for (i = 0; i <= this.options.step; i++) {
+                    _step_px = _h / this.options.step;
 
-                    this._steps[i] = _step_px * i;
-                    this._values[i] = this.options.values[i];
+                    for (i = 0; i <= this.options.step; i++) {
+
+                        this._steps[i] = _step_px * i;
+                        this._values[i] = this.options.values[i];
+
+                    }
 
                 }
             },
@@ -187,26 +199,31 @@
 
                 _p = (this.options.direction === "horizontal") ? x : y;
 
-                step = discret(_p, _step_px, this._steps);
+                if (this.options.step) {
+                    step = this.discret(_p, _step_px, this._steps);
+                    y = (this.options.direction === "vertical") ? (_step_px ) * step : 0;
+                    x = (this.options.direction === "horizontal") ? (_step_px ) * step : 0;
+                }
 
-                y = (this.options.direction === "vertical") ? (_step_px ) * step : 0;
-                x = (this.options.direction === "horizontal") ? (_step_px ) * step : 0;
 
 
                 this.setPosition(x, y)
 
 
-                function discret(value, threshold, array) {
 
-                    for (i = 0; i <= _this.options.step; i++) {
-
-                        if (value < array[i] + threshold / 2) return i;
-
-                    }
-
-                };
             },
 
+            discret: function(value, threshold, array) {
+
+
+                for (i = 0; i <= _this.options.step; i++) {
+
+                    if (value < array[i] + threshold / 2) return i;
+
+                }
+
+
+            },
 
             setPosition: function(x, y) {
 
@@ -236,12 +253,22 @@
 
                 this.reCalcSize();
 
-                step = (step > this.options.step) ? this.options.step : step;
+                step = discret(value, _step_px, this._steps);
 
                 y = (this.options.direction === "vertical") ? (_step_px - (this.handler.width / this.options.step)) * step : 0;
                 x = (this.options.direction === "horizontal") ? (_step_px - (this.handler.height / this.options.step)) * step : 0;
 
                 this.setPosition(x, y);
+
+                function discret(value, threshold, array) {
+
+                    for (i = 0; i <= _this.options.step; i++) {
+
+                        if (value < array[i] + threshold / 2) return i;
+
+                    }
+
+                };
             },
 
 
