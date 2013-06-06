@@ -31,10 +31,9 @@
 
     $(document).ready(function () {
 
-        $('#slide_me').drugger({
-            a: 10,
-            b: 1000,
-            step: 3,
+        drugger1 = $('#slide_me').drugger({
+            values: [0, 1000],
+            step: 10,
             direction: 'horizontal'
         });
 
