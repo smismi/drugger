@@ -1,324 +1,289 @@
 (function ($) {
 
 
-    //инициализацичя плагина
+	//инициализацичя плагина
 
 
-    $.fn.drugger = function (options) {
+	$.fn.drugger = function (options) {
 
 
-        var Drugger = function (obj, options) {
-            this.init(obj, options);
-        };
+		var Drugger = function (obj, options) {
+			this.init(obj, options);
+		};
 
-        Drugger.prototype = {
-            "constructor": Drugger,
-            init: function (obj, options) {
+		Drugger.prototype = {
+			"constructor": Drugger,
+			init: function (obj, options) {
 
-                var defaults = {
-                    min: null,
-                    max: null,
-                    step: null,
-                    values: [],
-                    direction: 'horizontal'
-                }
+				var defaults = {
+					min: null,
+					max: null,
+					step: null,
+					values: [],
+					direction: 'horizontal'
+				}
 
-                this.el = obj;
+				this.el = obj;
 
-                var isTouch = ('ontouchstart' in window);
+				var isTouch = ('ontouchstart' in window);
 
 
-                this.options = $.extend(defaults, options)
+				this.options = $.extend(defaults, options)
 
 
-                this.draw();
+				this.draw();
 
 
-            },
-            draw: function () {
-                //draw
-                _this = this;
+			},
+			draw: function () {
+				//draw
+				_this = this;
 
-                this.pos = {};
+				this.pos = {};
 
-                this._handler = $("<div/>").addClass("handler");
+				this._handler = $("<div/>").addClass("handler");
 
+				this._slider = $(this.el);
 
-                this._slider = $(this.el);
+				this._ticks = $("<div/>").addClass("ticks");
 
-                this._slider.addClass("slider").append(_this._handler);
 
-                this.prepare().discretize().mouseon();
 
-            },
-            prepare: function () {
 
-                _this = this;
-                this.pos.lockd = true;
-                this.slider = {};
-                this.handler = {};
 
-                return this;
-            },
-            discretize: function () {
 
-                if (this.options.step == null) return this;
 
-                this._steps = [];
-                this._values = [];
+				for (i = 0; i < this.options.values.length; i++) {
 
+				    _(i);
 
-                this.options.step = this.options.step - 1;
+					this._tick = $("<div/>").addClass("tick").css({width: 100 / this.options.values.length + "%"});
 
-                return this;
-            },
-            reCalcSize: function () {
+					this._ticks.append(this._tick.html(this.options.values[i]));
+				}
 
+				this._slider.addClass("slider").append(this._handler).append(this._ticks);
 
+				this.prepare().discretize().mouseon();
 
-                this.pos.lockd = false;
+			},
+			prepare: function () {
 
-                this.pos.x0 = event.pageX - $(this._handler).offset().left;
-                this.pos.y0 = event.pageY - $(this._handler).offset().top;
+				_this = this;
+				this.pos.lockd = true;
+				this.slider = {};
+				this.handler = {};
 
-                this.slider.width = $(this._slider).width();
-                this.slider.height = $(this._slider).height();
+				return this;
+			},
+			discretize: function () {
 
-                this.handler.width = $(this._handler).width();
-                this.handler.height = $(this._handler).height();
+				if (this.options.step == null) return this;
 
-                this.pos.xx = this.slider.width - $(this._handler).width();
-                this.pos.yy = this.slider.height - $(this._handler).height();
-//                this.options.step = this.options.step - 1;
 
-                _h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
+				this._steps = [];
+				this._values = [];
 
-                if (this.options.step) {
 
-                    _step_px = _h / this.options.step;
+				this.options.step = this.options.step - 1;
 
-                    for (i = 0; i <= this.options.step; i++) {
 
-                        this._steps[i] = _step_px * i;
-                        this._values[i] = this.options.values[i];
 
-                    }
 
-                }
-            },
-            mouseon: function () {
 
+				return this;
+			},
+			reCalcSize: function () {
 
-                this._handler.on({"mousedown": function (e) {
 
+				this.pos.lockd = false;
 
-                    //получить коордитаты handles и мыши
-                    _this.reCalcSize();
+				this.pos.x0 = event.pageX - $(this._handler).offset().left;
+				this.pos.y0 = event.pageY - $(this._handler).offset().top;
 
+				this.slider.width = $(this._slider).width();
+				this.slider.height = $(this._slider).height();
 
-//
-//                    //abs el
-//                    _this.pos.lockd = false;
-//
-//                    _this.pos.x0 = event.pageX - $(_this._handler).offset().left;
-//                    _this.pos.y0 = event.pageY - $(_this._handler).offset().top;
-//
-//                    _this.slider.width = $(_this._slider).width();
-//                    _this.slider.height = $(_this._slider).height();
-//
-//                    _this.handler.width = $(_this._handler).width();
-//                    _this.handler.height = $(_this._handler).height();
-//
-//                    _this.pos.xx = _this.slider.width - $(_this._handler).width();
-//                    _this.pos.yy = _this.slider.height - $(_this._handler).height();
-//
-//
-//                    _h = (_this.options.direction === "horizontal") ? _this.slider.width : _this.slider.height;
-//
-//                    _step_px = _h / _this.options.step;
-//
-//                    for (i = 0; i <= _this.options.step; i++) {
-//
-//                        _this._steps[i] = _step_px * i;
-//
-//                    }
+				this.handler.width = $(this._handler).width();
+				this.handler.height = $(this._handler).height();
 
-//                    debugger;
-                    $(document).off("mousemove").on("mousemove", function () {
+				this.pos.xx = this.slider.width - $(this._handler).width();
+				this.pos.yy = this.slider.height - $(this._handler).height();
 
-                        if (_this.pos.lockd) return;
-                        //новые координаты мыши
+				_h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
 
-                        //handler css
+				if (this.options.step) {
 
-                        y = (_this.options.direction === "vertical") ? event.pageY - $(_this._slider).offset().top - _this.pos.y0 : 0;
-                        x = (_this.options.direction === "horizontal") ? event.pageX - $(_this._slider).offset().left - _this.pos.x0 : 0;
+					_step_px = _h / this.options.step;
 
-                        if (y < 0) y = 0;
-                        if (x < 0) x = 0;
+					for (i = 0; i <= this.options.step; i++) {
 
-                        if (y > _this.pos.yy) y = _this.pos.yy;
-                        if (x > _this.pos.xx) x = _this.pos.xx;
+						this._steps[i] = _step_px * i;
+						this._values[i] = this.options.values[i];
 
-                        drag.call(_this, x, y);
-                    });
+					}
 
-                    $(document).off("mouseup").on("mouseup", function () {
+				}
+			},
+			mouseon: function () {
 
 
-                        _this.pos.lockd = true;
+				this._handler.on({"mousedown": function (e) {
 
-                        _("mouseup");
 
-                    });
+					//получить коордитаты handles и мыши
+					_this.reCalcSize();
 
+					$(document).off("mousemove").on("mousemove", function () {
 
-                },
+						if (_this.pos.lockd) return;
+						//новые координаты мыши
 
-                    "mouseleave": function () {
+						//handler css
 
-                    },
+						y = (_this.options.direction === "vertical") ? event.pageY - $(_this._slider).offset().top - _this.pos.y0 : 0;
+						x = (_this.options.direction === "horizontal") ? event.pageX - $(_this._slider).offset().left - _this.pos.x0 : 0;
 
-                    "mouseenter": function () {
+						if (y < 0) y = 0;
+						if (x < 0) x = 0;
 
+						if (y > _this.pos.yy) y = _this.pos.yy;
+						if (x > _this.pos.xx) x = _this.pos.xx;
 
-                    }
-                });
+						drag.call(_this, x, y);
+					});
 
+					$(document).off("mouseup").on("mouseup", function () {
 
-                function drag (x, y) {
-                    this.drag(x, y);
-                }
 
+						_this.pos.lockd = true;
 
-                return this;
-            },
-            drag: function() {
+						_("mouseup");
 
-                _this = this;
+					});
 
-                _p = (this.options.direction === "horizontal") ? x : y;
 
-                if (this.options.step) {
-                    step = this.discret(_p, _step_px, this._steps);
-                    y = (this.options.direction === "vertical") ? (_step_px ) * step : 0;
-                    x = (this.options.direction === "horizontal") ? (_step_px ) * step : 0;
-                }
+				},
 
+					"mouseleave": function () {
 
+					},
 
-                this.setPosition(x, y)
+					"mouseenter": function () {
 
 
+					}
+				});
 
-            },
 
-            discret: function(value, threshold, array) {
+				function drag(x, y) {
+					this.drag(x, y);
+				}
 
 
-                for (i = 0; i <= _this.options.step; i++) {
+				return this;
+			},
+			drag: function () {
 
-                    if (value < array[i] + threshold / 2) return i;
+				_this = this;
 
-                }
+				_p = (this.options.direction === "horizontal") ? x : y;
 
+				if (this.options.step) {
+					step = this.discret(_p, _step_px, this._steps);
+					y = (this.options.direction === "vertical") ? (_step_px ) * step : 0;
+					x = (this.options.direction === "horizontal") ? (_step_px ) * step : 0;
+				}
 
-            },
 
-            setPosition: function(x, y) {
+				this.setPosition(x, y)
 
 
-                $(this._handler).css({
-                    top: y,
-                    left: x
-                });
+			},
 
+			discret: function (value, threshold, array) {
 
-            },
 
+				for (i = 0; i <= _this.options.step; i++) {
 
-            setToStep: function (step) {
+					if (value < array[i] + threshold / 2) return i;
 
-                this.reCalcSize();
+				}
 
-                step = (step > this.options.step) ? this.options.step + 1 : step;
 
-                y = (this.options.direction === "vertical") ? (_step_px - (this.handler.width / this.options.step)) * step : 0;
-                x = (this.options.direction === "horizontal") ? (_step_px - (this.handler.height / this.options.step)) * step : 0;
+			},
 
-                this.setPosition(x, y);
-            },
-            //TODO:
-            setToValue: function (value) {
+			setPosition: function (x, y) {
 
-                this.reCalcSize();
 
-                step = discret(value, _step_px, this._steps);
+				$(this._handler).css({
+					top: y,
+					left: x
+				});
 
-                y = (this.options.direction === "vertical") ? (_step_px - (this.handler.width / this.options.step)) * step : 0;
-                x = (this.options.direction === "horizontal") ? (_step_px - (this.handler.height / this.options.step)) * step : 0;
 
-                this.setPosition(x, y);
+			},
 
-                function discret(value, threshold, array) {
 
-                    for (i = 0; i <= _this.options.step; i++) {
+			setToStep: function (step) {
 
-                        if (value < array[i] + threshold / 2) return i;
+				this.reCalcSize();
 
-                    }
+				step = (step > this.options.step) ? this.options.step + 1 : step;
 
-                };
-            },
+				y = (this.options.direction === "vertical") ? (_step_px - (this.handler.width / this.options.step)) * step : 0;
+				x = (this.options.direction === "horizontal") ? (_step_px - (this.handler.height / this.options.step)) * step : 0;
 
+				this.setPosition(x, y);
+			},
+			//TODO:
+			setToValue: function (value) {
 
+				this.reCalcSize();
 
+				step = discret(value, _step_px, this._steps);
 
+				y = (this.options.direction === "vertical") ? (_step_px - (this.handler.width / this.options.step)) * step : 0;
+				x = (this.options.direction === "horizontal") ? (_step_px - (this.handler.height / this.options.step)) * step : 0;
 
+				this.setPosition(x, y);
 
+				function discret(value, threshold, array) {
 
-            reinit: function () {
+					for (i = 0; i <= _this.options.step; i++) {
 
+						if (value < array[i] + threshold / 2) return i;
 
-                debugger;
+					}
 
-            },
-            destroy: function () {
+				};
+			},
 
 
-                debugger;
+			reinit: function () {
 
-            }
+				debugger;
 
+			},
+			destroy: function () {
 
+				debugger;
 
+			}
 
-        }
+		}
 
 
-        var drugger = new Drugger(this, options);
+		var drugger = new Drugger(this, options);
 
+		return drugger;
 
-//event
-//
-//
-//		_slider.on(_e.eventClick , function(e){
-//			console.log(e);
-//
-//		})
-//
-//
-//		_handler.on(_e.eventClick , function(e){
-//			console.log(e)
-//		})
-        return drugger;
-
-    }
+	}
 
 
 })(jQuery);
 
 
 function _(msg) {
-    console.log(msg);
+	console.log(msg);
 }

@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-        
-    <meta charset="utf-8">
-        <title>drugger</title>
+	    
+	<meta charset="utf-8">
+	    <title>drugger</title>
 
 
-     
+	 
 
-    <script src="js/jquery.2.0.js"></script>
+	<script src="js/jquery.2.0.js"></script>
 
-    <script type="text/javascript">
-        document.write("<script src=\"js\/eventManager.js?" + (new Date()).getTime() + "\"><\/script>");
-        document.write("<script src=\"js\/drugger.js?" + (new Date()).getTime() + "\"><\/script>");
-        document.write("<link rel=\"stylesheet\" href=\"css\/style.css?" + (new Date()).getTime() + "\" type=\"text/css\">");
-    </script>
+	<script type="text/javascript">
+		document.write("<script src=\"js\/eventManager.js?" + (new Date()).getTime() + "\"><\/script>");
+		document.write("<script src=\"js\/drugger.js?" + (new Date()).getTime() + "\"><\/script>");
+		document.write("<link rel=\"stylesheet\" href=\"css\/style.css?" + (new Date()).getTime() + "\" type=\"text/css\">");
+	</script>
 
 
 </head>
 <body>   
  
+
 <h1>drugger</h1>
 
 
 <div id="slide_me"></div>
 
+
  
 <button id="set_to_step">CLICK ME</button>
 <script type="text/javascript">
 
-    $(document).ready(function () {
+	$(document).ready(function () {
 
-        drugger1 = $('#slide_me').drugger({
-            values: [0, 1000],
-            step: 10,
-            direction: 'horizontal'
-        });
+		drugger1 = $('#slide_me').drugger({
+			values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+			step: 10,
+			direction: 'horizontal'
+		});
 
-    })
+	})
 
 </script>
 

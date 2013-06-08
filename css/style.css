@@ -40,3 +40,13 @@ body {
 	height: 100px;
 	background: #f00;
 }
+
+.ticks{
+
+	width: 110%;
+}
+
+.tick {
+	display: block;
+	float: left;
+}
