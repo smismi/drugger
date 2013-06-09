@@ -19,9 +19,15 @@
 					min: null,
 					max: null,
 					step: null,
+					value: null,
 					values: [],
-					direction: 'horizontal'
+					direction: 'horizontal',
+					onStart: null,
+					onDragStart: null,
+					onDragStop: null,
+					onChange: null
 				}
+				this.op
 
 				this.el = obj;
 
@@ -33,6 +39,8 @@
 
 				this.draw();
 
+
+				if (this.options.onStart instanceof Function) this.options.onStart();
 
 			},
 			draw: function () {
@@ -47,20 +55,22 @@
 
 				this._ticks = $("<div/>").addClass("ticks");
 
+				this._value = this.options.value;
 
+				if (this.options.values) {
+					this.options.step = this.options.values.length;
+					for (i = 0; i < this.options.values.length; i++) {
 
+						_(i);
 
+						this._tick = $("<div/>").addClass("tick").css({width: 100 / this.options.values.length + "%"});
 
+						this._ticks.append(this._tick.html(this.options.values[i]));
+					}
 
-
-				for (i = 0; i < this.options.values.length; i++) {
-
-				    _(i);
-
-					this._tick = $("<div/>").addClass("tick").css({width: 100 / this.options.values.length + "%"});
-
-					this._ticks.append(this._tick.html(this.options.values[i]));
 				}
+
+
 
 				this._slider.addClass("slider").append(this._handler).append(this._ticks);
 
@@ -69,8 +79,7 @@
 			},
 			prepare: function () {
 
-				_this = this;
-				this.pos.lockd = true;
+ 				this.pos.lockd = true;
 				this.slider = {};
 				this.handler = {};
 
@@ -85,7 +94,6 @@
 				this._values = [];
 
 
-				this.options.step = this.options.step - 1;
 
 
 
@@ -126,7 +134,7 @@
 				}
 			},
 			mouseon: function () {
-
+			   	// TODO touchevents
 
 				this._handler.on({"mousedown": function (e) {
 
@@ -138,6 +146,7 @@
 
 						if (_this.pos.lockd) return;
 						//новые координаты мыши
+
 
 						//handler css
 
@@ -190,9 +199,15 @@
 				_p = (this.options.direction === "horizontal") ? x : y;
 
 				if (this.options.step) {
+
+
+
 					step = this.discret(_p, _step_px, this._steps);
-					y = (this.options.direction === "vertical") ? (_step_px ) * step : 0;
-					x = (this.options.direction === "horizontal") ? (_step_px ) * step : 0;
+
+					y = (this.options.direction === "vertical") ? (_step_px) * step : 0;
+					x = (this.options.direction === "horizontal") ? (_step_px) * step : 0;
+
+
 				}
 
 
@@ -215,6 +230,8 @@
 
 			setPosition: function (x, y) {
 
+				y = (y + this.handler.height > this.slider.height) ? this.slider.height - this.handler.height : y;
+				x = (x + this.handler.width > this.slider.width) ? this.slider.width - this.handler.width : x;
 
 				$(this._handler).css({
 					top: y,
@@ -223,6 +240,19 @@
 
 
 			},
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 			setToStep: function (step) {
@@ -236,7 +266,21 @@
 
 				this.setPosition(x, y);
 			},
-			//TODO:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			//TODO: touchevents
 			setToValue: function (value) {
 
 				this.reCalcSize();

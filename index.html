@@ -35,8 +35,11 @@
 
 		drugger1 = $('#slide_me').drugger({
 			values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-			step: 10,
-			direction: 'horizontal'
+			direction: 'horizontal',
+			onStart: function() { _("onStart")},
+			onDragStart: function() { _("onDragStart")},
+			onDragStop: function() { _("onDragStop")},
+			onChange: null
 		});
 
 	})
