@@ -24,7 +24,7 @@ body {
 
 .slider {
 	position: relative;
-	/*width: 800px;*/
+	width: 800px;
     height: 100px;
 	background: #00f;
 
@@ -42,9 +42,11 @@ body {
 }
 
 .ticks{
+	position: relative;
 }
 
 .tick {
-	display: block;
-	float: left;
-}
+	position: absolute;
+	/*display: inline-block;*/
+	/*border: 1px solid red;*/
+ }
