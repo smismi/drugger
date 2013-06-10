@@ -51,18 +51,33 @@
 
 				this.calcSize();
 
+				this.steps = this.options.values.length || this.options.steps;
 
-				this._steps = [];
-				this._values = [];
 
-				this.discretize();
+				if (this.steps) {
 
-				this.drawTicks();
+					this._steps = [];
+					this._values = [];
+
+					this.discretize();
+					this.drawTicks();
+
+				} else {
+
+					this._range = {};
+
+					this.normalize();
+					this.drawRangeTicks();
+
+				}
+
 
 				this.coord = {};
 
 
 				return this;
+
+
 
 			},
 			calcSize: function () {
@@ -75,14 +90,28 @@
 				this.handler.height = $(this._handler).height();
 
 			},
+			normalize: function () {
+
+
+			   	this._range.min = this.options.min || 0;
+			   	this._range.max = this.options.max || this.slider.width;
+
+ 				this.getNorm = function (_p) {
+					return _p / this.slider.width * (this._range.max - this._range.min) + this._range.min;
+				}
+
+				return this.getNorm;
+
+
+			},
 			discretize: function () {
 
 
 				_h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
 
-				step_px = _h / this.options.values.length - 1;
+				step_px = _h / this.steps - 1;
 
-				for (i = 0; i < this.options.values.length; i++) {
+				for (i = 0; i < this.steps; i++) {
 
 					this._steps[i] = step_px * i;
 					this._values[i] = this.options.values[i];
@@ -104,7 +133,7 @@
 				_this = this;
 				this._ticks = $("<div/>").addClass("ticks");
 
-				for (i = 0; i < this.options.values.length; i++) {
+				for (i = 0; i < this.steps; i++) {
 
 					this._tick = $("<div/>").addClass("tick");
 
@@ -115,6 +144,24 @@
 				}
 
 				this._slider.append(this._ticks);
+
+
+			},
+			drawRangeTicks: function () {
+				_this = this;
+				this._ticks = $("<div/>").addClass("ticks");
+
+//				for (i = 0; i < this.steps; i++) {
+
+//					this._tick = $("<div/>").addClass("tick");
+
+//					this._ticks.append(this._tick.html(this.options.values[i]).css({
+//						top: (this.options.direction === "horizontal") ? this.slider.height : _this._steps[i],
+//						left: (this.options.direction === "horizontal") ? _this._steps[i] : this.slider.width
+//					}));
+//				}
+
+//				this._slider.append(this._ticks);
 
 
 			},
@@ -167,16 +214,30 @@
 			},
 			handlerMove: function(x, y) {
 
-				y = (y + this.handler.height > this.slider.height) ? this.slider.height - this.handler.height : y;
 				x = (x + this.handler.width > this.slider.width) ? this.slider.width - this.handler.width : x;
+				y = (y + this.handler.height > this.slider.height) ? this.slider.height - this.handler.height : y;
 
  				_p = (this.options.direction === "horizontal") ? x : y;
 
-				step = this.getStep(_p) || x;
 
-				if (step != this.value) {
+				if (this.steps) {
 
-					this.value = step;
+					var value = this.getStep(_p);
+
+					y = (this.options.direction === "vertical") ?  this._steps[value] : 0;
+					x = (this.options.direction === "horizontal") ?  this._steps[value]  : 0;
+
+
+				} else {
+
+
+					var value = this.getNorm(_p);
+
+  				}
+
+				if (value != this.value) {
+
+					this.value = value;
 
 					this.valueChange();
 
@@ -192,9 +253,13 @@
 			},
 			getStep: function(_p) {
 
+				if (!this.steps) return null;
+
+				var threshold = this._steps[1] - this._steps[0];
+
 				for (i = 0; i <= this._steps.length; i++) {
 
-					if (_p < this._steps[i]) return i;
+					if (_p < this._steps[i] + threshold / 2) return i;
 
 				}
 
