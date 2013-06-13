@@ -109,8 +109,8 @@
 
 				_h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
 
-				step_px = _h / this.steps - 1;
-
+				step_px = _h / (this.steps - 1);
+				_(step_px)
 				for (i = 0; i < this.steps; i++) {
 
 					this._steps[i] = step_px * i;
@@ -184,7 +184,7 @@
 
 						y = (_this.options.direction === "vertical") ? event.pageY - $(_this._slider).offset().top - _this.coord.y0 : 0;
 						x = (_this.options.direction === "horizontal") ? event.pageX - $(_this._slider).offset().left - _this.coord.x0 : 0;
-
+//
 						if (y < 0) y = 0;
 						if (x < 0) x = 0;
 
@@ -214,8 +214,8 @@
 			},
 			handlerMove: function(x, y) {
 
-				x = (x + this.handler.width > this.slider.width) ? this.slider.width - this.handler.width : x;
-				y = (y + this.handler.height > this.slider.height) ? this.slider.height - this.handler.height : y;
+				x = (x > this.slider.width) ? this.slider.width : x;
+				y = (y > this.slider.height) ? this.slider.height : y;
 
  				_p = (this.options.direction === "horizontal") ? x : y;
 
