@@ -9,10 +9,11 @@
 	 
 
 	<script src="js/jquery.2.0.js"></script>
+	<script src="js/drugger.js"></script>
 
 	<script type="text/javascript">
 		document.write("<script src=\"js\/eventManager.js?" + (new Date()).getTime() + "\"><\/script>");
-		document.write("<script src=\"js\/drugger.js?" + (new Date()).getTime() + "\"><\/script>");
+//		document.write("<script src=\"js\/drugger.js?" + (new Date()).getTime() + "\"><\/script>");
 		document.write("<link rel=\"stylesheet\" href=\"css\/style.css?" + (new Date()).getTime() + "\" type=\"text/css\">");
 	</script>
 
@@ -34,9 +35,9 @@
 	$(document).ready(function () {
 
 		drugger1 = $('#slide_me').drugger({
-//			values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-			min: 200,
-			max: 260,
+			values: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+//			min: 200,
+//			max: 260,
 			direction   : 'horizontal',
 			onStart: function() { _("onStart")},
 			onDragStart: function() { _("onDragStart")},

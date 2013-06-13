@@ -26,7 +26,7 @@ body {
 	position: relative;
 	width: 800px;
     height: 100px;
-	background: #00f;
+	/*background: #00f;*/
 
 
 }
@@ -34,15 +34,18 @@ body {
 
 .handler {
 	position: absolute;
-	top: 0;
+	top: 10px;
 	left: 0;
 	width: 20px;
-	height: 90px;
+	height: 70px;
 	background: #f00;
 }
 
 .ticks{
 	position: relative;
+	/*width: 800px;*/
+	border: 1px solid green;
+	/*margin-left: 10px;*/
 }
 
 .tick {

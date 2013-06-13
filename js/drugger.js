@@ -66,6 +66,10 @@
 
 					this._range = {};
 
+					this._steps = [];
+					this._values = [];
+
+
 					this.normalize();
 					this.drawRangeTicks();
 
@@ -90,17 +94,31 @@
 				this.handler.height = $(this._handler).height();
 
 			},
+			getNorm : function (_p) {
+				return _p / this.slider.width * (this._range.max - this._range.min) + this._range.min;
+			},
 			normalize: function () {
 
 
 			   	this._range.min = this.options.min || 0;
 			   	this._range.max = this.options.max || this.slider.width;
 
- 				this.getNorm = function (_p) {
-					return _p / this.slider.width * (this._range.max - this._range.min) + this._range.min;
+
+				var steps = 10;
+
+				_h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
+
+				step_px = _h / (steps);
+
+
+				for (i = 0; i <= steps; i++) {
+					var value = this.getNorm(step_px * i);
+
+					this._steps[i] = step_px * i;
+					this._values[i] = value;
+
 				}
 
-				return this.getNorm;
 
 
 			},
@@ -110,7 +128,7 @@
 				_h = (this.options.direction === "horizontal") ? this.slider.width : this.slider.height;
 
 				step_px = _h / (this.steps - 1);
-				_(step_px)
+
 				for (i = 0; i < this.steps; i++) {
 
 					this._steps[i] = step_px * i;
@@ -137,7 +155,7 @@
 
 					this._tick = $("<div/>").addClass("tick");
 
-					this._ticks.append(this._tick.html(this.options.values[i]).css({
+					this._ticks.append(this._tick.html(this._values[i]).css({
 						top: (this.options.direction === "horizontal") ? this.slider.height : _this._steps[i],
 						left: (this.options.direction === "horizontal") ? _this._steps[i] : this.slider.width
 					}));
@@ -151,17 +169,16 @@
 				_this = this;
 				this._ticks = $("<div/>").addClass("ticks");
 
-//				for (i = 0; i < this.steps; i++) {
+				for (i = 0; i <= 10; i++) {
 
-//					this._tick = $("<div/>").addClass("tick");
+					this._tick = $("<div/>").addClass("tick");
+					this._ticks.append(this._tick.html(this._values[i]).css({
+						top: (this.options.direction === "horizontal") ? this.slider.height : _this._steps[i],
+						left: (this.options.direction === "horizontal") ? _this._steps[i] : this.slider.width
+					}));
+				}
 
-//					this._ticks.append(this._tick.html(this.options.values[i]).css({
-//						top: (this.options.direction === "horizontal") ? this.slider.height : _this._steps[i],
-//						left: (this.options.direction === "horizontal") ? _this._steps[i] : this.slider.width
-//					}));
-//				}
-
-//				this._slider.append(this._ticks);
+				this._slider.append(this._ticks);
 
 
 			},
