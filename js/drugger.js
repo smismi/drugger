@@ -222,10 +222,11 @@
 
 				if (this.steps) {
 
-					var value = this.getStep(_p);
+					var step = this.getStep(_p);
+					value = this._values[step];
 
-					y = (this.options.direction === "vertical") ?  this._steps[value] : 0;
-					x = (this.options.direction === "horizontal") ?  this._steps[value]  : 0;
+					y = (this.options.direction === "vertical") ?  this._steps[step] : 0;
+					x = (this.options.direction === "horizontal") ?  this._steps[step]  : 0;
 
 
 				} else {
@@ -257,11 +258,12 @@
 
 				var threshold = this._steps[1] - this._steps[0];
 
-				for (i = 0; i <= this._steps.length; i++) {
+				for (i = 0; i < this._steps.length; i++) {
 
 					if (_p < this._steps[i] + threshold / 2) return i;
 
 				}
+				return this._steps.length - 1;
 
 			},
 			discret: function(_p) {
